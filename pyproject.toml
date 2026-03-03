@@ -1,0 +1,78 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "traceback-ai"
+version = "0.1.0"
+description = "AI-powered Python exception debugger — instant explanations, root causes, and fixes for your errors"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.9"
+authors = [
+  { name = "Hugo Gonzalez", email = "hugonzalezhuerta@gmail.com" },
+]
+keywords = [
+    "ai", "debugging", "exceptions", "traceback", "developer-tools",
+    "openai", "anthropic", "ollama", "error-analysis", "llm",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Debuggers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "rich>=13.0,<15.0",
+    "httpx>=0.24,<1.0",
+    "click>=8.0,<9.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.21",
+    "pytest-cov>=4.0",
+    "ruff>=0.1",
+    "mypy>=1.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/hugo-onnx/traceback-ai"
+Documentation = "https://github.com/hugo-onnx/traceback-ai#readme"
+Repository = "https://github.com/hugo-onnx/traceback-ai"
+Issues = "https://github.com/hugo-onnx/traceback-ai/issues"
+Changelog = "https://github.com/hugo-onnx/traceback-ai/blob/main/CHANGELOG.md"
+
+[project.scripts]
+tbai = "traceback_ai.cli:cli"
+traceback-ai = "traceback_ai.cli:cli"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/traceback_ai"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.9"
+strict = true
+ignore_missing_imports = true
