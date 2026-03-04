@@ -13,17 +13,18 @@ from traceback_ai.providers.cerebras import CerebrasProvider
 # Each provider imports _http_post into its own namespace via `from base import _http_post`,
 # so we must patch within each provider's module namespace for the mock to intercept calls.
 _PATCH = {
-    "openai":    "traceback_ai.providers.openai._http_post",
+    "openai": "traceback_ai.providers.openai._http_post",
     "anthropic": "traceback_ai.providers.anthropic._http_post",
-    "ollama":    "traceback_ai.providers.ollama._http_post",
-    "groq":      "traceback_ai.providers.groq._http_post",
-    "cerebras":  "traceback_ai.providers.cerebras._http_post",
+    "ollama": "traceback_ai.providers.ollama._http_post",
+    "groq": "traceback_ai.providers.groq._http_post",
+    "cerebras": "traceback_ai.providers.cerebras._http_post",
 }
 
 _VALID_JSON = '{"explanation": "test", "causes": ["c1"], "fix": "f1"}'
 
 
 # ─── validate_base_url ────────────────────────────────────────────────────────
+
 
 class TestValidateBaseUrl:
     def test_https_accepted(self):
@@ -50,6 +51,7 @@ class TestValidateBaseUrl:
 
 
 # ─── AnalysisResult ───────────────────────────────────────────────────────────
+
 
 class TestAnalysisResult:
     def test_from_valid_json(self):
@@ -103,6 +105,7 @@ And some trailing text."""
 
 # ─── OpenAI ───────────────────────────────────────────────────────────────────
 
+
 class TestOpenAIProvider:
     def test_name(self):
         assert OpenAIProvider(api_key="test-key").name == "OpenAI"
@@ -141,6 +144,7 @@ class TestOpenAIProvider:
 
 
 # ─── Anthropic ────────────────────────────────────────────────────────────────
+
 
 class TestAnthropicProvider:
     def test_name(self):
@@ -181,6 +185,7 @@ class TestAnthropicProvider:
 
 # ─── Ollama ───────────────────────────────────────────────────────────────────
 
+
 class TestOllamaProvider:
     def test_name(self):
         assert "Ollama" in OllamaProvider().name
@@ -211,6 +216,7 @@ class TestOllamaProvider:
 
 
 # ─── Groq ─────────────────────────────────────────────────────────────────────
+
 
 class TestGroqProvider:
     def test_name(self):
@@ -251,6 +257,7 @@ class TestGroqProvider:
 
 
 # ─── Cerebras ─────────────────────────────────────────────────────────────────
+
 
 class TestCerebrasProvider:
     def test_name(self):
