@@ -1,8 +1,9 @@
 """Tests for traceback_ai.config module."""
 
 import os
-import pytest
 from unittest.mock import patch
+
+import pytest
 from traceback_ai.config import Config, configure, get_config
 
 
@@ -22,7 +23,6 @@ class TestConfig:
             assert cfg.context_lines == 30
 
     def test_configure_updates_global(self):
-        original_provider = get_config().provider
         configure(context_lines=25)
         assert get_config().context_lines == 25
         # Cleanup
