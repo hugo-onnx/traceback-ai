@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 import os
-from typing import Optional
 
 from .base import BaseProvider, _http_post, validate_base_url
 
@@ -20,7 +19,7 @@ class CerebrasProvider(BaseProvider):
     Get a free API key at https://cloud.cerebras.ai
     """
 
-    def __init__(self, api_key: Optional[str] = None, base_url: Optional[str] = None) -> None:
+    def __init__(self, api_key: str | None = None, base_url: str | None = None) -> None:
         self._api_key = api_key or os.getenv("CEREBRAS_API_KEY") or ""
         self._base_url = validate_base_url(base_url or _DEFAULT_BASE_URL)
 
@@ -64,4 +63,4 @@ class CerebrasProvider(BaseProvider):
             data = json.loads(body)
             return data["choices"][0]["message"]["content"]
         except (json.JSONDecodeError, KeyError, IndexError):
-            raise RuntimeError("Unexpected response format from Cerebras API.")
+            raise RuntimeError("Unexpected response format from Cerebras API.") from None
