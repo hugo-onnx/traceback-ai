@@ -20,7 +20,7 @@ data = {"name": "Alice", "age": 30}
 
 
 # ─── Example 2: Manual analysis of caught exceptions ─────────────────────────
-import sys
+import sys  # noqa: E402
 
 
 def process_user(user_id: int):
