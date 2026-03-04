@@ -139,7 +139,10 @@ class TestOpenAIProvider:
 
     def test_complete_raises_on_malformed_response(self):
         provider = OpenAIProvider(api_key="sk-test")
-        with patch(_PATCH["openai"], return_value="not json at all"), pytest.raises(RuntimeError, match="Unexpected response"):
+        with (
+            patch(_PATCH["openai"], return_value="not json at all"),
+            pytest.raises(RuntimeError, match="Unexpected response"),
+        ):
             provider.complete("sys", "user", "gpt-4o-mini", 100, 10)
 
 
@@ -178,7 +181,10 @@ class TestAnthropicProvider:
 
     def test_complete_raises_on_malformed_response(self):
         provider = AnthropicProvider(api_key="test-key")
-        with patch(_PATCH["anthropic"], return_value="not json"), pytest.raises(RuntimeError, match="Unexpected response"):
+        with (
+            patch(_PATCH["anthropic"], return_value="not json"),
+            pytest.raises(RuntimeError, match="Unexpected response"),
+        ):
             provider.complete("sys", "user", "claude-haiku-4-5-20251001", 100, 10)
 
 
@@ -202,7 +208,10 @@ class TestOllamaProvider:
 
     def test_connection_error_gives_helpful_message(self):
         provider = OllamaProvider(base_url="http://localhost:11434")
-        with patch(_PATCH["ollama"], side_effect=ConnectionError("refused")), pytest.raises(ConnectionError, match="Ollama"):
+        with (
+            patch(_PATCH["ollama"], side_effect=ConnectionError("refused")),
+            pytest.raises(ConnectionError, match="Ollama"),
+        ):
             provider.complete("sys", "user", "llama3.2", 100, 10)
 
     def test_complete_success(self):
