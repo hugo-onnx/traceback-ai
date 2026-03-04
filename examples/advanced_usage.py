@@ -11,26 +11,27 @@ import traceback_ai
 
 traceback_ai.install(
     provider="ollama",
-    model="llama3.2",        # or "codellama", "mistral", etc.
-    context_lines=20,        # More code context
+    model="llama3.2",  # or "codellama", "mistral", etc.
+    context_lines=20,  # More code context
 )
 
 # ─── Example 2: Fine-tuned for data science ──────────────────────────────────
 traceback_ai.configure(
     provider="openai",
-    model="gpt-4o",          # Use the powerful model for complex pandas/numpy errors
-    show_locals=True,        # See df.shape, dtypes, etc. in the analysis
+    model="gpt-4o",  # Use the powerful model for complex pandas/numpy errors
+    show_locals=True,  # See df.shape, dtypes, etc. in the analysis
     context_lines=25,
     redact_secrets=True,
-    interactive=True,        # Ask: "how do I vectorize this?"
+    interactive=True,  # Ask: "how do I vectorize this?"
 )
 
 # ─── Example 3: CI/CD mode (disable interactive, minimal output) ─────────────
 import os
+
 if os.getenv("CI"):
     traceback_ai.configure(
         interactive=False,
-        show_locals=False,   # Don't log variable values in CI
+        show_locals=False,  # Don't log variable values in CI
         timeout=15,
     )
 
