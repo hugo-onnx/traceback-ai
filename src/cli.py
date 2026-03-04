@@ -36,7 +36,9 @@ def cli() -> None:
 
 @cli.command()
 @click.argument("file", type=click.Path(exists=True, readable=True))
-@click.option("--provider", "-p", default=None, help="LLM provider: openai, anthropic, ollama, auto")
+@click.option(
+    "--provider", "-p", default=None, help="LLM provider: openai, anthropic, ollama, auto"
+)
 @click.option("--model", "-m", default=None, help="Model name")
 @click.option("--api-key", default=None, envvar="TBAI_API_KEY", help="API key")
 @click.option("--no-fix", is_flag=True, default=False, help="Skip the fix code block")
@@ -65,13 +67,17 @@ def analyze(
     from .analyzer import run_analysis, _resolve_provider
     from .formatter import print_analysis, print_thinking, print_error
 
-    updates = {k: v for k, v in {
-        "provider": provider,
-        "model": model,
-        "api_key": api_key,
-        "show_fix": not no_fix,
-        "interactive": interactive,
-    }.items() if v is not None}
+    updates = {
+        k: v
+        for k, v in {
+            "provider": provider,
+            "model": model,
+            "api_key": api_key,
+            "show_fix": not no_fix,
+            "interactive": interactive,
+        }.items()
+        if v is not None
+    }
     if updates:
         configure(**updates)
 
@@ -93,6 +99,7 @@ def analyze(
         )
 
     from .config import get_config
+
     cfg = get_config()
 
     try:
@@ -110,6 +117,7 @@ def analyze(
 
         if interactive:
             from .handler import _run_interactive_session
+
             _run_interactive_session(ctx, result, cfg)
 
     except Exception as e:
@@ -147,12 +155,16 @@ def run(
     import runpy
     import traceback_ai
 
-    updates = {k: v for k, v in {
-        "provider": provider,
-        "model": model,
-        "show_locals": show_locals or None,
-        "interactive": interactive or None,
-    }.items() if v is not None}
+    updates = {
+        k: v
+        for k, v in {
+            "provider": provider,
+            "model": model,
+            "show_locals": show_locals or None,
+            "interactive": interactive or None,
+        }.items()
+        if v is not None
+    }
 
     traceback_ai.install(**updates)
 
@@ -194,7 +206,13 @@ def config() -> None:
     console.print()
     console.print("[bold cyan]Detected API keys[/bold cyan]\n")
 
-    for env_var in ("OPENAI_API_KEY", "ANTHROPIC_API_KEY", "GROQ_API_KEY", "CEREBRAS_API_KEY", "TBAI_API_KEY"):
+    for env_var in (
+        "OPENAI_API_KEY",
+        "ANTHROPIC_API_KEY",
+        "GROQ_API_KEY",
+        "CEREBRAS_API_KEY",
+        "TBAI_API_KEY",
+    ):
         val = os.getenv(env_var)
         if val:
             masked = val[:8] + "..." + val[-4:] if len(val) > 12 else "****"
