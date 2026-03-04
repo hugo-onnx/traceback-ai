@@ -5,6 +5,15 @@ All notable changes to traceback-ai will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] — 2026-03-04
+
+### Changed
+- Expanded README with beginner-friendly setup guide: step-by-step API key instructions for all providers, `.env` file setup with `python-dotenv`, and OS-specific environment variable instructions
+- Added Troubleshooting section to README
+
+### Fixed
+- Moved `build` and `twine` from runtime `dependencies` to `dev` optional dependencies — they were incorrectly installed for end users
+
 ## [0.1.0] — 2026-03-04
 
 ### Added
@@ -25,4 +34,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - HTTP security: TLS verification, redirect blocking, response size cap, sanitized error messages
 - URL validation: rejects plain HTTP for remote hosts across all providers
 
+[0.1.1]: https://github.com/hugo-onnx/traceback-ai/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/hugo-onnx/traceback-ai/releases/tag/v0.1.0
