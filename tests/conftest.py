@@ -9,4 +9,5 @@ def make_exception_info(msg="test error", exc_class=ValueError):
         raise exc_class(msg)
     except exc_class:
         import sys
+
         return sys.exc_info()
