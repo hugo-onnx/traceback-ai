@@ -8,7 +8,7 @@ import traceback
 from dataclasses import dataclass, field
 from pathlib import Path
 from types import TracebackType
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 # Variable name patterns that suggest the value is a secret
 _SECRET_PATTERNS = re.compile(
@@ -41,7 +41,7 @@ class FrameInfo:
     lineno: int
     function: str
     code_context: str
-    locals: Dict[str, str] = field(default_factory=dict)
+    locals: dict[str, str] = field(default_factory=dict)
 
     @property
     def is_user_code(self) -> bool:
@@ -60,11 +60,11 @@ class ExceptionContext:
     exc_type: str
     exc_message: str
     traceback_str: str
-    frames: List[FrameInfo]
-    chained_cause: Optional["ExceptionContext"] = None
+    frames: list[FrameInfo]
+    chained_cause: ExceptionContext | None = None
 
     @property
-    def error_frame(self) -> Optional[FrameInfo]:
+    def error_frame(self) -> FrameInfo | None:
         """The innermost user-code frame where the error occurred."""
         for frame in reversed(self.frames):
             if frame.is_user_code:
@@ -73,7 +73,7 @@ class ExceptionContext:
 
     def to_prompt_text(self, show_locals: bool = False, redact_secrets: bool = True) -> str:
         """Format the context as a prompt-friendly string."""
-        parts: List[str] = []
+        parts: list[str] = []
 
         # Exception summary
         parts.append(f"## Exception\n**Type:** `{self.exc_type}`\n**Message:** {self.exc_message}")
@@ -124,9 +124,7 @@ def _is_secret(name: str, value: str) -> bool:
     if _SECRET_VALUE_PATTERNS.match(value):
         return True
     # Catch nested secrets in dicts/objects: {'password': '...', 'api_key': '...'}
-    if _SECRET_DICT_KEY_PATTERNS.search(value):
-        return True
-    return False
+    return bool(_SECRET_DICT_KEY_PATTERNS.search(value))
 
 
 def _format_value(value: Any) -> str:
@@ -165,14 +163,14 @@ def _extract_frames(
     context_lines: int,
     show_locals: bool,
     redact_secrets: bool,
-) -> List[FrameInfo]:
+) -> list[FrameInfo]:
     """Walk a traceback and extract frame information."""
-    frames: List[FrameInfo] = []
+    frames: list[FrameInfo] = []
 
     extracted = traceback.extract_tb(tb)
     # Walk tb to get frame locals
     tb_frame = tb
-    frame_locals_list: List[Dict[str, Any]] = []
+    frame_locals_list: list[dict[str, Any]] = []
     while tb_frame is not None:
         frame_locals_list.append(tb_frame.tb_frame.f_locals.copy())
         tb_frame = tb_frame.tb_next
@@ -182,7 +180,7 @@ def _extract_frames(
             frame_summary.filename, frame_summary.lineno, context_lines
         )
 
-        locals_dict: Dict[str, str] = {}
+        locals_dict: dict[str, str] = {}
         if show_locals and i < len(frame_locals_list):
             for name, value in frame_locals_list[i].items():
                 if not name.startswith("__"):
@@ -208,7 +206,7 @@ def _extract_frames(
 def build_context(
     exc_type: type,
     exc_value: BaseException,
-    exc_tb: Optional[TracebackType],
+    exc_tb: TracebackType | None,
     context_lines: int = 15,
     show_locals: bool = False,
     redact_secrets: bool = True,
@@ -230,19 +228,19 @@ def build_context(
     tb_lines = traceback.format_exception(exc_type, exc_value, exc_tb)
     traceback_str = "".join(tb_lines)
 
-    frames: List[FrameInfo] = []
+    frames: list[FrameInfo] = []
     if exc_tb is not None:
         frames = _extract_frames(exc_tb, context_lines, show_locals, redact_secrets)
 
     # Handle chained exceptions (__cause__ or __context__)
-    chained: Optional[ExceptionContext] = None
+    chained: ExceptionContext | None = None
     cause = exc_value.__cause__ or (
         exc_value.__context__ if not exc_value.__suppress_context__ else None
     )
     if cause is not None and cause is not exc_value:
         cause_type = type(cause)
         cause_tb = cause.__traceback__
-        cause_frames: List[FrameInfo] = []
+        cause_frames: list[FrameInfo] = []
         if cause_tb:
             cause_frames = _extract_frames(cause_tb, context_lines, show_locals, redact_secrets)
         chained = ExceptionContext(
