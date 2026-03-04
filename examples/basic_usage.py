@@ -22,9 +22,11 @@ data = {"name": "Alice", "age": 30}
 # ─── Example 2: Manual analysis of caught exceptions ─────────────────────────
 import sys
 
+
 def process_user(user_id: int):
     users = {1: "Alice", 2: "Bob"}
     return users[user_id]  # Raises KeyError for unknown IDs
+
 
 try:
     process_user(999)
@@ -43,6 +45,6 @@ except Exception:
 traceback_ai.install(
     provider="anthropic",
     model="claude-haiku-4-5-20251001",  # Fast and cheap
-    show_locals=True,      # Include variable values in analysis
-    interactive=True,      # Ask follow-up questions after analysis
+    show_locals=True,  # Include variable values in analysis
+    interactive=True,  # Ask follow-up questions after analysis
 )
