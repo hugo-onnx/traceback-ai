@@ -84,6 +84,7 @@ class TestBuildContext:
 
     def test_secrets_redacted(self):
         import os
+
         # Use os.getenv so the secret doesn't appear in the source-code context line
         secret = os.getenv("_TBAI_TEST_SECRET_NOT_SET_", "sk-supersecretkey123")
         try:
