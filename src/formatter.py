@@ -2,23 +2,19 @@
 
 from __future__ import annotations
 
-from typing import List, Optional
-
-from rich.columns import Columns
 from rich.console import Console
 from rich.markup import escape
 from rich.panel import Panel
 from rich.rule import Rule
 from rich.syntax import Syntax
 from rich.text import Text
-from rich import box
 
 from .providers.base import AnalysisResult
 
 console = Console(stderr=True)  # Output to stderr to not pollute stdout
 
 
-def _detect_language(code: Optional[str]) -> str:
+def _detect_language(code: str | None) -> str:
     """Guess the language for syntax highlighting."""
     if not code:
         return "python"
@@ -79,7 +75,7 @@ def print_analysis(
     # Fix description
     if result.fix:
         console.print()
-        console.print(f"[bold green] Suggested Fix[/bold green]")
+        console.print("[bold green] Suggested Fix[/bold green]")
         console.print(f"  {escape(result.fix)}")
 
     # Fix code
