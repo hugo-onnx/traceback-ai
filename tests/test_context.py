@@ -1,14 +1,12 @@
 """Tests for traceback_ai.context module."""
 
 import sys
-import pytest
+
 from traceback_ai.context import (
-    build_context,
-    context_from_string,
-    ExceptionContext,
     FrameInfo,
     _is_secret,
-    _format_value,
+    build_context,
+    context_from_string,
 )
 
 
