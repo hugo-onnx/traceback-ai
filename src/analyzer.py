@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import os
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from .config import Config, get_config
 from .context import ExceptionContext
@@ -15,11 +15,11 @@ if TYPE_CHECKING:
 
 def _resolve_provider(config: Config) -> BaseProvider:
     """Instantiate the correct provider based on config and available API keys."""
-    from .providers.openai import OpenAIProvider
     from .providers.anthropic import AnthropicProvider
-    from .providers.ollama import OllamaProvider
-    from .providers.groq import GroqProvider
     from .providers.cerebras import CerebrasProvider
+    from .providers.groq import GroqProvider
+    from .providers.ollama import OllamaProvider
+    from .providers.openai import OpenAIProvider
 
     provider_name = config.provider
     api_key = config.api_key
@@ -59,7 +59,7 @@ def _resolve_provider(config: Config) -> BaseProvider:
 
 def run_analysis(
     ctx: ExceptionContext,
-    config: Optional[Config] = None,
+    config: Config | None = None,
 ) -> AnalysisResult:
     """Run the full LLM analysis on an exception context.
 
@@ -94,7 +94,7 @@ def run_followup(
     ctx: ExceptionContext,
     previous: AnalysisResult,
     question: str,
-    config: Optional[Config] = None,
+    config: Config | None = None,
 ) -> str:
     """Ask a follow-up question after an initial analysis.
 
