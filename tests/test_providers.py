@@ -1,14 +1,15 @@
 """Tests for provider implementations."""
 
 import json
+from unittest.mock import patch
+
 import pytest
-from unittest.mock import MagicMock, patch
-from traceback_ai.providers.base import AnalysisResult, BaseProvider, validate_base_url
-from traceback_ai.providers.openai import OpenAIProvider
 from traceback_ai.providers.anthropic import AnthropicProvider
-from traceback_ai.providers.ollama import OllamaProvider
-from traceback_ai.providers.groq import GroqProvider
+from traceback_ai.providers.base import AnalysisResult, validate_base_url
 from traceback_ai.providers.cerebras import CerebrasProvider
+from traceback_ai.providers.groq import GroqProvider
+from traceback_ai.providers.ollama import OllamaProvider
+from traceback_ai.providers.openai import OpenAIProvider
 
 # Each provider imports _http_post into its own namespace via `from base import _http_post`,
 # so we must patch within each provider's module namespace for the mock to intercept calls.
@@ -138,9 +139,8 @@ class TestOpenAIProvider:
 
     def test_complete_raises_on_malformed_response(self):
         provider = OpenAIProvider(api_key="sk-test")
-        with patch(_PATCH["openai"], return_value="not json at all"):
-            with pytest.raises(RuntimeError, match="Unexpected response"):
-                provider.complete("sys", "user", "gpt-4o-mini", 100, 10)
+        with patch(_PATCH["openai"], return_value="not json at all"), pytest.raises(RuntimeError, match="Unexpected response"):
+            provider.complete("sys", "user", "gpt-4o-mini", 100, 10)
 
 
 # ─── Anthropic ────────────────────────────────────────────────────────────────
@@ -178,9 +178,8 @@ class TestAnthropicProvider:
 
     def test_complete_raises_on_malformed_response(self):
         provider = AnthropicProvider(api_key="test-key")
-        with patch(_PATCH["anthropic"], return_value="not json"):
-            with pytest.raises(RuntimeError, match="Unexpected response"):
-                provider.complete("sys", "user", "claude-haiku-4-5-20251001", 100, 10)
+        with patch(_PATCH["anthropic"], return_value="not json"), pytest.raises(RuntimeError, match="Unexpected response"):
+            provider.complete("sys", "user", "claude-haiku-4-5-20251001", 100, 10)
 
 
 # ─── Ollama ───────────────────────────────────────────────────────────────────
@@ -203,9 +202,8 @@ class TestOllamaProvider:
 
     def test_connection_error_gives_helpful_message(self):
         provider = OllamaProvider(base_url="http://localhost:11434")
-        with patch(_PATCH["ollama"], side_effect=ConnectionError("refused")):
-            with pytest.raises(ConnectionError, match="Ollama"):
-                provider.complete("sys", "user", "llama3.2", 100, 10)
+        with patch(_PATCH["ollama"], side_effect=ConnectionError("refused")), pytest.raises(ConnectionError, match="Ollama"):
+            provider.complete("sys", "user", "llama3.2", 100, 10)
 
     def test_complete_success(self):
         provider = OllamaProvider()
