@@ -29,9 +29,7 @@ class Config:
     base_url: Optional[str] = field(default_factory=lambda: os.getenv("TBAI_BASE_URL"))
     """Custom base URL (useful for Ollama or compatible APIs)."""
 
-    context_lines: int = field(
-        default_factory=lambda: int(os.getenv("TBAI_CONTEXT_LINES", "15"))
-    )
+    context_lines: int = field(default_factory=lambda: int(os.getenv("TBAI_CONTEXT_LINES", "15")))
     """Number of source code lines to include around the error location."""
 
     show_locals: bool = field(
@@ -54,9 +52,7 @@ class Config:
     )
     """Automatically redact likely secrets/API keys from variable values."""
 
-    timeout: int = field(
-        default_factory=lambda: int(os.getenv("TBAI_TIMEOUT", "30"))
-    )
+    timeout: int = field(default_factory=lambda: int(os.getenv("TBAI_TIMEOUT", "30")))
     """HTTP request timeout in seconds."""
 
     max_output_tokens: int = field(
@@ -91,7 +87,9 @@ def configure(**kwargs) -> Config:
     global _config
     for key, value in kwargs.items():
         if not hasattr(_config, key):
-            raise ValueError(f"Unknown config key: {key!r}. Valid keys: {list(Config.__dataclass_fields__)}")
+            raise ValueError(
+                f"Unknown config key: {key!r}. Valid keys: {list(Config.__dataclass_fields__)}"
+            )
         setattr(_config, key, value)
     return _config
 
