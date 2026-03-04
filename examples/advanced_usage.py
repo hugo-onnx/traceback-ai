@@ -26,7 +26,7 @@ traceback_ai.configure(
 )
 
 # ─── Example 3: CI/CD mode (disable interactive, minimal output) ─────────────
-import os
+import os  # noqa: E402
 
 if os.getenv("CI"):
     traceback_ai.configure(
@@ -36,9 +36,10 @@ if os.getenv("CI"):
     )
 
 # ─── Example 4: Programmatic analysis (returns structured data) ──────────────
-import sys
-from traceback_ai.context import build_context
-from traceback_ai.analyzer import run_analysis
+import sys  # noqa: E402
+
+from traceback_ai.analyzer import run_analysis  # noqa: E402
+from traceback_ai.context import build_context  # noqa: E402
 
 try:
     result = 1 / 0
