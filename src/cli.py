@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-from typing import Optional
 
 import click
 from rich.console import Console
@@ -45,9 +44,9 @@ def cli() -> None:
 @click.option("--interactive", "-i", is_flag=True, default=False, help="Ask follow-up questions")
 def analyze(
     file: str,
-    provider: Optional[str],
-    model: Optional[str],
-    api_key: Optional[str],
+    provider: str | None,
+    model: str | None,
+    api_key: str | None,
     no_fix: bool,
     interactive: bool,
 ) -> None:
@@ -62,10 +61,10 @@ def analyze(
         tbai analyze crash.txt --provider anthropic
         tbai analyze error.log --interactive
     """
+    from .analyzer import _resolve_provider, run_analysis
     from .config import configure
     from .context import context_from_string
-    from .analyzer import run_analysis, _resolve_provider
-    from .formatter import print_analysis, print_thinking, print_error
+    from .formatter import print_analysis, print_thinking
 
     updates = {
         k: v
@@ -135,8 +134,8 @@ def analyze(
 def run(
     script: str,
     args: tuple,
-    provider: Optional[str],
-    model: Optional[str],
+    provider: str | None,
+    model: str | None,
     show_locals: bool,
     interactive: bool,
 ) -> None:
@@ -152,7 +151,9 @@ def run(
         tbai run my_script.py -- --my-arg value
         tbai run my_script.py --show-locals --interactive
     """
+    import contextlib
     import runpy
+
     import traceback_ai
 
     updates = {
@@ -171,17 +172,16 @@ def run(
     # Patch sys.argv so the script sees its own args
     sys.argv = [script, *args]
 
-    try:
+    with contextlib.suppress(SystemExit):
         runpy.run_path(script, run_name="__main__")
-    except SystemExit:
-        pass  # Let SystemExit propagate normally
 
 
 @cli.command()
 def config() -> None:
     """Show the current traceback-ai configuration."""
-    from .config import get_config
     import os
+
+    from .config import get_config
 
     cfg = get_config()
 
@@ -225,7 +225,7 @@ def config() -> None:
 
 @cli.command("ollama-models")
 @click.option("--host", default=None, help="Ollama host URL (default: http://localhost:11434)")
-def ollama_models(host: Optional[str]) -> None:
+def ollama_models(host: str | None) -> None:
     """List available models in your local Ollama instance."""
     from .providers.ollama import OllamaProvider
 
