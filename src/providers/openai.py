@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 import os
-from typing import Optional
 
 from .base import BaseProvider, _http_post, validate_base_url
 
@@ -12,7 +11,7 @@ from .base import BaseProvider, _http_post, validate_base_url
 class OpenAIProvider(BaseProvider):
     """Calls the OpenAI chat completions API directly via httpx."""
 
-    def __init__(self, api_key: Optional[str] = None, base_url: Optional[str] = None) -> None:
+    def __init__(self, api_key: str | None = None, base_url: str | None = None) -> None:
         self._api_key = api_key or os.getenv("OPENAI_API_KEY") or ""
         self._base_url = validate_base_url(
             base_url or os.getenv("OPENAI_BASE_URL", "https://api.openai.com")
@@ -57,4 +56,4 @@ class OpenAIProvider(BaseProvider):
             data = json.loads(body)
             return data["choices"][0]["message"]["content"]
         except (json.JSONDecodeError, KeyError, IndexError):
-            raise RuntimeError("Unexpected response format from OpenAI API.")
+            raise RuntimeError("Unexpected response format from OpenAI API.") from None
