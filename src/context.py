@@ -49,8 +49,7 @@ class FrameInfo:
         p = Path(self.filename)
         parts = p.parts
         return not any(
-            part in ("site-packages", "dist-packages", "lib", "<frozen")
-            for part in parts
+            part in ("site-packages", "dist-packages", "lib", "<frozen") for part in parts
         ) and self.filename not in ("<stdin>", "<string>", "<console>")
 
 
@@ -105,7 +104,9 @@ class ExceptionContext:
                     # Values are already redacted at extraction time if redact_secrets was set
                     local_lines.append(f"  {name} = {value}")
                 if local_lines:
-                    parts.append("\n## Local Variables\n```python\n" + "\n".join(local_lines) + "\n```")
+                    parts.append(
+                        "\n## Local Variables\n```python\n" + "\n".join(local_lines) + "\n```"
+                    )
 
         return "\n".join(parts)
 
@@ -177,7 +178,9 @@ def _extract_frames(
         tb_frame = tb_frame.tb_next
 
     for i, frame_summary in enumerate(extracted):
-        code_context = _get_source_context(frame_summary.filename, frame_summary.lineno, context_lines)
+        code_context = _get_source_context(
+            frame_summary.filename, frame_summary.lineno, context_lines
+        )
 
         locals_dict: Dict[str, str] = {}
         if show_locals and i < len(frame_locals_list):
