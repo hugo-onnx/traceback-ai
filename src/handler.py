@@ -158,21 +158,26 @@ def install(
     global _installed
 
     # Apply any provided settings to the global config
-    updates = {k: v for k, v in {
-        "provider": provider,
-        "model": model,
-        "api_key": api_key,
-        "base_url": base_url,
-        "context_lines": context_lines,
-        "show_locals": show_locals,
-        "show_fix": show_fix,
-        "interactive": interactive,
-        "redact_secrets": redact_secrets,
-        "timeout": timeout,
-    }.items() if v is not None}
+    updates = {
+        k: v
+        for k, v in {
+            "provider": provider,
+            "model": model,
+            "api_key": api_key,
+            "base_url": base_url,
+            "context_lines": context_lines,
+            "show_locals": show_locals,
+            "show_fix": show_fix,
+            "interactive": interactive,
+            "redact_secrets": redact_secrets,
+            "timeout": timeout,
+        }.items()
+        if v is not None
+    }
 
     if updates:
         from .config import configure
+
         configure(**updates)
 
     sys.excepthook = _handle_exception
