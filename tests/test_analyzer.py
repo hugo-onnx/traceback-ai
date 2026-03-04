@@ -21,6 +21,7 @@ def _make_ctx():
 class TestResolveProvider:
     def test_auto_selects_anthropic_when_key_set(self):
         import os
+
         cfg = Config()
         cfg.provider = "auto"
         with patch.dict(os.environ, {"ANTHROPIC_API_KEY": "test-key"}, clear=False):
@@ -33,10 +34,14 @@ class TestResolveProvider:
 
     def test_auto_selects_openai_when_key_set(self):
         import os
+
         cfg = Config()
         cfg.provider = "auto"
-        env = {k: v for k, v in os.environ.items()
-               if k not in ("OPENAI_API_KEY", "ANTHROPIC_API_KEY", "TBAI_API_KEY")}
+        env = {
+            k: v
+            for k, v in os.environ.items()
+            if k not in ("OPENAI_API_KEY", "ANTHROPIC_API_KEY", "TBAI_API_KEY")
+        }
         env["OPENAI_API_KEY"] = "sk-test"
         with patch.dict(os.environ, env, clear=True):
             provider = _resolve_provider(cfg)
@@ -44,10 +49,21 @@ class TestResolveProvider:
 
     def test_auto_falls_back_to_ollama(self):
         import os
+
         cfg = Config()
         cfg.provider = "auto"
-        env = {k: v for k, v in os.environ.items()
-               if k not in ("OPENAI_API_KEY", "ANTHROPIC_API_KEY", "GROQ_API_KEY", "CEREBRAS_API_KEY", "TBAI_API_KEY")}
+        env = {
+            k: v
+            for k, v in os.environ.items()
+            if k
+            not in (
+                "OPENAI_API_KEY",
+                "ANTHROPIC_API_KEY",
+                "GROQ_API_KEY",
+                "CEREBRAS_API_KEY",
+                "TBAI_API_KEY",
+            )
+        }
         with patch.dict(os.environ, env, clear=True):
             provider = _resolve_provider(cfg)
             assert "Ollama" in provider.name
@@ -60,10 +76,14 @@ class TestResolveProvider:
 
     def test_auto_selects_groq_when_key_set(self):
         import os
+
         cfg = Config()
         cfg.provider = "auto"
-        env = {k: v for k, v in os.environ.items()
-               if k not in ("OPENAI_API_KEY", "ANTHROPIC_API_KEY", "TBAI_API_KEY")}
+        env = {
+            k: v
+            for k, v in os.environ.items()
+            if k not in ("OPENAI_API_KEY", "ANTHROPIC_API_KEY", "TBAI_API_KEY")
+        }
         env["GROQ_API_KEY"] = "gsk_test"
         with patch.dict(os.environ, env, clear=True):
             provider = _resolve_provider(cfg)
@@ -71,10 +91,14 @@ class TestResolveProvider:
 
     def test_auto_selects_cerebras_when_key_set(self):
         import os
+
         cfg = Config()
         cfg.provider = "auto"
-        env = {k: v for k, v in os.environ.items()
-               if k not in ("OPENAI_API_KEY", "ANTHROPIC_API_KEY", "GROQ_API_KEY", "TBAI_API_KEY")}
+        env = {
+            k: v
+            for k, v in os.environ.items()
+            if k not in ("OPENAI_API_KEY", "ANTHROPIC_API_KEY", "GROQ_API_KEY", "TBAI_API_KEY")
+        }
         env["CEREBRAS_API_KEY"] = "csk_test"
         with patch.dict(os.environ, env, clear=True):
             provider = _resolve_provider(cfg)
