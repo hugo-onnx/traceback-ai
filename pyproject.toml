@@ -14,7 +14,7 @@ authors = [
 ]
 keywords = [
     "ai", "debugging", "exceptions", "traceback", "developer-tools",
-    "openai", "anthropic", "ollama", "error-analysis", "llm",
+    "openai", "anthropic", "ollama", "groq", "cerebras", "error-analysis", "llm",
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
