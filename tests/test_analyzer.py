@@ -1,12 +1,12 @@
 """Tests for traceback_ai.analyzer module."""
 
 import sys
-import pytest
 from unittest.mock import MagicMock, patch
 
+import pytest
+from traceback_ai.analyzer import _resolve_provider, run_analysis, run_followup
 from traceback_ai.config import Config
 from traceback_ai.context import build_context
-from traceback_ai.analyzer import run_analysis, run_followup, _resolve_provider
 from traceback_ai.providers.base import AnalysisResult
 
 
