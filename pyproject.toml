@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "traceback-ai"
-version = "0.1.0"
+version = "0.1.1"
 description = "AI-powered Python exception debugger — instant explanations, root causes, and fixes for your errors"
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -35,8 +35,6 @@ dependencies = [
     "rich>=13.0,<15.0",
     "httpx>=0.24,<1.0",
     "click>=8.0,<9.0",
-    "build>=1.4.0",
-    "twine>=6.2.0",
 ]
 
 [project.optional-dependencies]
@@ -46,6 +44,8 @@ dev = [
     "pytest-cov>=4.0",
     "ruff>=0.1",
     "mypy>=1.0",
+    "build>=1.4.0",
+    "twine>=6.2.0",
 ]
 
 [project.urls]
