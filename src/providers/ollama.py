@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 import os
-from typing import Optional
 
 import httpx
 
@@ -23,7 +22,7 @@ class OllamaProvider(BaseProvider):
     Do not expose the Ollama port to external networks.
     """
 
-    def __init__(self, base_url: Optional[str] = None) -> None:
+    def __init__(self, base_url: str | None = None) -> None:
         raw_url = base_url or os.getenv("OLLAMA_HOST", _DEFAULT_BASE_URL)
         # Allow http://localhost only; HTTPS is fine for tunneled remote instances
         self._base_url = validate_base_url(raw_url, allow_http_localhost=True)
@@ -59,13 +58,13 @@ class OllamaProvider(BaseProvider):
                 f"Cannot connect to Ollama at {self._base_url}. "
                 "Make sure Ollama is running: https://ollama.ai\n"
                 f"Then pull a model: ollama pull {model}"
-            )
+            ) from None
 
         try:
             data = json.loads(body)
             return data["message"]["content"]
         except (json.JSONDecodeError, KeyError):
-            raise RuntimeError("Unexpected response format from Ollama.")
+            raise RuntimeError("Unexpected response format from Ollama.") from None
 
     def list_models(self) -> list:
         """List available models in the local Ollama instance."""
