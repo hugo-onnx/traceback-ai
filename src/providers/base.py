@@ -124,7 +124,7 @@ def _http_post(
     """
     with httpx.Client(
         timeout=timeout,
-        verify=True,             # Always verify TLS certificates
+        verify=True,  # Always verify TLS certificates
         follow_redirects=False,  # Never follow redirects (SSRF / key-exfil prevention)
     ) as client:
         try:
