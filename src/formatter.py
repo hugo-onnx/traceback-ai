@@ -96,7 +96,9 @@ def print_analysis(
                 word_wrap=True,
                 padding=(1, 2),
             )
-            console.print(Panel(syntax, title="[bold green]Fix Code[/bold green]", border_style="green"))
+            console.print(
+                Panel(syntax, title="[bold green]Fix Code[/bold green]", border_style="green")
+            )
 
     # Docs hint
     if result.docs_hint and result.docs_hint not in ("None", "null", ""):
