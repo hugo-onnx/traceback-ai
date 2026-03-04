@@ -286,6 +286,28 @@ pip install -e ".[dev]"
 pytest
 ```
 
+### Project layout
+
+```
+src/                  # Package source (installed as traceback_ai)
+├── __init__.py
+├── _version.py
+├── analyzer.py
+├── cli.py
+├── config.py
+├── context.py
+├── formatter.py
+├── handler.py
+└── providers/
+    ├── __init__.py
+    ├── base.py
+    ├── anthropic.py
+    ├── cerebras.py
+    ├── groq.py
+    ├── ollama.py
+    └── openai.py
+tests/
+
 ---
 
 ## License
