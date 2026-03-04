@@ -41,7 +41,9 @@ def _resolve_provider(config: Config) -> BaseProvider:
     if provider_name == "openai":
         return OpenAIProvider(api_key=api_key or os.getenv("OPENAI_API_KEY"), base_url=base_url)
     elif provider_name == "anthropic":
-        return AnthropicProvider(api_key=api_key or os.getenv("ANTHROPIC_API_KEY"), base_url=base_url)
+        return AnthropicProvider(
+            api_key=api_key or os.getenv("ANTHROPIC_API_KEY"), base_url=base_url
+        )
     elif provider_name == "groq":
         return GroqProvider(api_key=api_key or os.getenv("GROQ_API_KEY"), base_url=base_url)
     elif provider_name == "cerebras":
