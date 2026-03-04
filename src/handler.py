@@ -7,12 +7,10 @@ analyzes unhandled Python exceptions with AI.
 from __future__ import annotations
 
 import sys
-import traceback
 from types import TracebackType
-from typing import Optional, Type
 
 from .config import Config, get_config
-from .context import ExceptionContext, build_context, context_from_string
+from .context import ExceptionContext, build_context
 
 # Save the original excepthook so we can restore it
 _original_excepthook = sys.excepthook
@@ -20,10 +18,10 @@ _installed = False
 
 
 def _handle_exception(
-    exc_type: Type[BaseException],
+    exc_type: type[BaseException],
     exc_value: BaseException,
-    exc_tb: Optional[TracebackType],
-    config: Optional[Config] = None,
+    exc_tb: TracebackType | None,
+    config: Config | None = None,
 ) -> None:
     """The core exception handler — called on unhandled exceptions."""
     cfg = config or get_config()
@@ -38,16 +36,12 @@ def _handle_exception(
         return
 
     # Lazy imports to keep startup fast
-    from .analyzer import run_analysis, run_followup
+    from .analyzer import _resolve_provider, run_analysis
     from .formatter import (
-        console,
         print_analysis,
         print_error,
-        print_followup_answer,
-        print_interactive_prompt,
         print_thinking,
     )
-    from .analyzer import _resolve_provider
 
     try:
         ctx = build_context(
@@ -93,10 +87,9 @@ def _run_interactive_session(
     """Run an interactive Q&A session after the initial analysis."""
     from .analyzer import run_followup
     from .formatter import (
-        console,
+        print_error,
         print_followup_answer,
         print_interactive_prompt,
-        print_error,
     )
 
     print_interactive_prompt()
@@ -120,16 +113,16 @@ def _run_interactive_session(
 
 
 def install(
-    provider: Optional[str] = None,
-    model: Optional[str] = None,
-    api_key: Optional[str] = None,
-    base_url: Optional[str] = None,
-    context_lines: Optional[int] = None,
-    show_locals: Optional[bool] = None,
-    show_fix: Optional[bool] = None,
-    interactive: Optional[bool] = None,
-    redact_secrets: Optional[bool] = None,
-    timeout: Optional[int] = None,
+    provider: str | None = None,
+    model: str | None = None,
+    api_key: str | None = None,
+    base_url: str | None = None,
+    context_lines: int | None = None,
+    show_locals: bool | None = None,
+    show_fix: bool | None = None,
+    interactive: bool | None = None,
+    redact_secrets: bool | None = None,
+    timeout: int | None = None,
 ) -> None:
     """Install the AI exception handler.
 
@@ -195,9 +188,9 @@ def uninstall() -> None:
 
 
 def analyze(
-    exc_type: Type[BaseException],
+    exc_type: type[BaseException],
     exc_value: BaseException,
-    exc_tb: Optional[TracebackType],
+    exc_tb: TracebackType | None,
 ) -> None:
     """Manually analyze an exception (without installing the global hook).
 
