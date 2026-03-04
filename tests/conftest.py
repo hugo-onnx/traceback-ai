@@ -1,6 +1,5 @@
 """Shared fixtures for traceback-ai tests."""
 
-import pytest
 
 
 def make_exception_info(msg="test error", exc_class=ValueError):
