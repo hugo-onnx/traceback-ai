@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 import os
-from typing import Optional
 
 from .base import BaseProvider, _http_post, validate_base_url
 
@@ -12,7 +11,7 @@ from .base import BaseProvider, _http_post, validate_base_url
 class AnthropicProvider(BaseProvider):
     """Calls the Anthropic Messages API directly via httpx."""
 
-    def __init__(self, api_key: Optional[str] = None, base_url: Optional[str] = None) -> None:
+    def __init__(self, api_key: str | None = None, base_url: str | None = None) -> None:
         self._api_key = api_key or os.getenv("ANTHROPIC_API_KEY") or ""
         self._base_url = validate_base_url(base_url or "https://api.anthropic.com")
 
@@ -55,4 +54,4 @@ class AnthropicProvider(BaseProvider):
             data = json.loads(body)
             return data["content"][0]["text"]
         except (json.JSONDecodeError, KeyError, IndexError):
-            raise RuntimeError("Unexpected response format from Anthropic API.")
+            raise RuntimeError("Unexpected response format from Anthropic API.") from None
