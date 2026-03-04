@@ -133,7 +133,9 @@ def _http_post(
                 content=json.dumps(payload),
             )
         except httpx.TimeoutException:
-            raise TimeoutError(f"Request timed out after {timeout}s. Try increasing timeout.") from None
+            raise TimeoutError(
+                f"Request timed out after {timeout}s. Try increasing timeout."
+            ) from None
         except httpx.ConnectError as exc:
             host = urlparse(url).netloc
             raise ConnectionError(f"Cannot connect to {host}.") from exc
@@ -145,7 +147,9 @@ def _http_post(
         if code == 401:
             raise PermissionError("Authentication failed — check your API key.") from exc
         if code == 403:
-            raise PermissionError("Forbidden — your API key may lack required permissions.") from exc
+            raise PermissionError(
+                "Forbidden — your API key may lack required permissions."
+            ) from exc
         if code == 429:
             raise RuntimeError("Rate limited — wait a moment and try again.") from exc
         if code >= 500:
