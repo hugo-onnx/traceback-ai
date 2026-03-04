@@ -1,6 +1,6 @@
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "traceback-ai"
@@ -57,8 +57,12 @@ Changelog = "https://github.com/hugo-onnx/traceback-ai/blob/main/CHANGELOG.md"
 tbai = "traceback_ai.cli:cli"
 traceback-ai = "traceback_ai.cli:cli"
 
-[tool.hatch.build.targets.wheel]
-packages = ["src/traceback_ai"]
+[tool.setuptools]
+packages = ["traceback_ai", "traceback_ai.providers"]
+
+[tool.setuptools.package-dir]
+traceback_ai = "src"
+"traceback_ai.providers" = "src/providers"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
