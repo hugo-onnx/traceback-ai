@@ -5,8 +5,7 @@ from __future__ import annotations
 import json
 import re
 from abc import ABC, abstractmethod
-from dataclasses import dataclass, field
-from typing import Dict, List, Optional
+from dataclasses import dataclass
 from urllib.parse import urlparse
 
 import httpx
@@ -95,8 +94,8 @@ def validate_base_url(url: str, allow_http_localhost: bool = False) -> str:
 
 def _http_post(
     url: str,
-    headers: Dict[str, str],
-    payload: Dict,
+    headers: dict[str, str],
+    payload: dict,
     timeout: int,
 ) -> str:
     """Make a secure HTTP POST to an LLM API and return the response body.
@@ -134,7 +133,7 @@ def _http_post(
                 content=json.dumps(payload),
             )
         except httpx.TimeoutException:
-            raise TimeoutError(f"Request timed out after {timeout}s. Try increasing timeout.")
+            raise TimeoutError(f"Request timed out after {timeout}s. Try increasing timeout.") from None
         except httpx.ConnectError as exc:
             host = urlparse(url).netloc
             raise ConnectionError(f"Cannot connect to {host}.") from exc
@@ -144,14 +143,14 @@ def _http_post(
     except httpx.HTTPStatusError as exc:
         code = exc.response.status_code
         if code == 401:
-            raise PermissionError("Authentication failed — check your API key.")
+            raise PermissionError("Authentication failed — check your API key.") from exc
         if code == 403:
-            raise PermissionError("Forbidden — your API key may lack required permissions.")
+            raise PermissionError("Forbidden — your API key may lack required permissions.") from exc
         if code == 429:
-            raise RuntimeError("Rate limited — wait a moment and try again.")
+            raise RuntimeError("Rate limited — wait a moment and try again.") from exc
         if code >= 500:
-            raise RuntimeError(f"Provider server error (HTTP {code}) — try again later.")
-        raise RuntimeError(f"API request failed (HTTP {code}).")
+            raise RuntimeError(f"Provider server error (HTTP {code}) — try again later.") from exc
+        raise RuntimeError(f"API request failed (HTTP {code}).") from exc
 
     # Guard against absurdly large responses
     body = response.text
@@ -166,14 +165,14 @@ class AnalysisResult:
     """Structured result from the LLM analysis."""
 
     explanation: str
-    causes: List[str]
+    causes: list[str]
     fix: str
-    fix_code: Optional[str] = None
-    docs_hint: Optional[str] = None
+    fix_code: str | None = None
+    docs_hint: str | None = None
     raw_response: str = ""
 
     @classmethod
-    def from_json(cls, data: dict, raw: str = "") -> "AnalysisResult":
+    def from_json(cls, data: dict, raw: str = "") -> AnalysisResult:
         return cls(
             explanation=data.get("explanation", ""),
             causes=data.get("causes", []),
@@ -184,7 +183,7 @@ class AnalysisResult:
         )
 
     @classmethod
-    def from_text(cls, text: str) -> "AnalysisResult":
+    def from_text(cls, text: str) -> AnalysisResult:
         """Parse a JSON response, handling common LLM formatting quirks."""
         raw = text
 
@@ -248,7 +247,7 @@ class BaseProvider(ABC):
     def analyze(
         self,
         context_text: str,
-        model: Optional[str] = None,
+        model: str | None = None,
         max_tokens: int = 1024,
         timeout: int = 30,
     ) -> AnalysisResult:
@@ -268,7 +267,7 @@ class BaseProvider(ABC):
         context_text: str,
         previous_analysis: str,
         question: str,
-        model: Optional[str] = None,
+        model: str | None = None,
         max_tokens: int = 512,
         timeout: int = 30,
     ) -> str:
