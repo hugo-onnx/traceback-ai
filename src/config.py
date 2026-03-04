@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import os
 from dataclasses import dataclass, field
-from typing import Literal, Optional
+from typing import Literal
 
 Provider = Literal["openai", "anthropic", "ollama", "groq", "cerebras", "auto"]
 
@@ -20,13 +20,13 @@ class Config:
     provider: Provider = field(default_factory=lambda: os.getenv("TBAI_PROVIDER", "auto"))  # type: ignore[assignment]
     """LLM provider to use. 'auto' selects based on available API keys."""
 
-    model: Optional[str] = field(default_factory=lambda: os.getenv("TBAI_MODEL"))
+    model: str | None = field(default_factory=lambda: os.getenv("TBAI_MODEL"))
     """Model name. If None, uses the provider's recommended default."""
 
-    api_key: Optional[str] = field(default_factory=lambda: os.getenv("TBAI_API_KEY"))
+    api_key: str | None = field(default_factory=lambda: os.getenv("TBAI_API_KEY"))
     """API key. Falls back to OPENAI_API_KEY / ANTHROPIC_API_KEY if not set."""
 
-    base_url: Optional[str] = field(default_factory=lambda: os.getenv("TBAI_BASE_URL"))
+    base_url: str | None = field(default_factory=lambda: os.getenv("TBAI_BASE_URL"))
     """Custom base URL (useful for Ollama or compatible APIs)."""
 
     context_lines: int = field(default_factory=lambda: int(os.getenv("TBAI_CONTEXT_LINES", "15")))
